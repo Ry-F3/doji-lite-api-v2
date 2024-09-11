@@ -60,6 +60,7 @@ class UploadFileView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         file = serializer.validated_data['file']
+        file_name = file.name # Capture the file name
         exchange = serializer.validated_data.get('exchange', None)
 
         if exchange != 'BloFin':
@@ -67,7 +68,7 @@ class UploadFileView(generics.CreateAPIView):
 
         # Process the CSV using the CSVProcessor class
         processor = CsvProcessor(owner, exchange)
-        result = processor.process_csv_file(file)
+        result = processor.process_csv_file(file, file_name)
 
         if isinstance(result, Response):
             return result  # Return early if an error occurred during CSV processing

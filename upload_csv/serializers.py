@@ -22,7 +22,7 @@ class SaveTradeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TradeUploadBlofin
-        fields = ['id', 'owner', 'underlying_asset', 'margin_mode',
+        fields = ['id', 'owner', 'file_name', 'underlying_asset', 'margin_mode',
                   'leverage', 'order_time', 'side', 'avg_fill_formatted', 'price_formatted',
                   'filled_quantity_formatted', 'original_filled_quantity_formatted', 'pnl_formatted',
                   'pnl_percentage_formatted', 'fee', 'exchange',

@@ -19,7 +19,7 @@ class CsvCopyProcessor:
     def __init__(self, handler: 'BloFinHandler'):
         self.handler = handler
 
-    def process_csv_data(self, csv_data, user, exchange):
+    def process_csv_data(self, csv_data, user, exchange, file_name):
         """Process CSV data, only adding new trades."""
         new_trades = []
         duplicates = []
@@ -32,7 +32,7 @@ class CsvCopyProcessor:
                 canceled_count += 1
                 continue
 
-            trade = self.handler.process_row(row, user, exchange)
+            trade = self.handler.process_row(row, user, exchange, file_name)
             if trade:
                 if self.is_duplicate(trade):
                     duplicates_count += 1
@@ -77,7 +77,7 @@ class CsvCopyProcessor:
 
 
 class BloFinHandler:
-    def process_row(self, row, owner, exchange):
+    def process_row(self, row, owner, exchange, file_name):
         duplicates = []
         try:
             # Extract fields from the row
@@ -107,6 +107,7 @@ class BloFinHandler:
             if underlying_asset not in ['ARBUSDT', 'BTCUSDT', 'ETHUSDT', 'RUNEUSDT', 'INJUSDT', 'VRAUSDT', 'LDOUSDT', 'WIFUSDT', 'SOLUSDT', 'BLURUSDT', 'MATICUSDT', 'SEIUSDT', 'NEARUSDT']:
                 return None
 
+            
             avg_fill = convert_to_decimal(row['Avg Fill'])
             pnl = convert_to_decimal(row['PNL'])
             pnl_percentage = convert_to_decimal(row['PNL%'])
@@ -117,31 +118,6 @@ class BloFinHandler:
 
             is_matched = False
             is_open = False
-
-            # if is_open:
-            #     symbol = row.get('Underlying Asset', '')
-            #     current_price_data = fetch_quote(symbol)
-            #     current_price = Decimal('0.0')
-
-            #     if current_price_data:
-            #         # Get the first item from the list
-            #         current_price_data = current_price_data[0]
-            #         current_price = convert_to_decimal(
-            #             current_price_data.get('price', '0.0'))
-
-            #     leverage = convert_to_decimal(row.get('Leverage', '1.0'))
-            #     long_short = row.get('Side', 'Unknown')
-
-            #     try:
-            #         pnl_percentage, pnl = calculate_trade_pnl_and_percentage(
-            #             current_price, avg_fill, leverage, long_short, filled_quantity
-            #         )
-            #         price = current_price
-            #     except DivisionByZero:
-
-            #         pnl_percentage, pnl = Decimal('0.0'), Decimal('0.0')
-            # else:
-            #     price = price
 
             # Define the tolerance level
             TOLERANCE = Decimal('0.0001')
@@ -184,6 +160,7 @@ class BloFinHandler:
 
             trade_upload_csv = TradeUploadBlofin(
                 owner=owner,
+                file_name=file_name,
                 underlying_asset=underlying_asset,
                 margin_mode=row['Margin Mode'],
                 leverage=row['Leverage'],
