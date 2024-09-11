@@ -1,8 +1,8 @@
 from upload_csv.calculations.long_short import calculate_trade_pnl_and_percentage
 from upload_csv.api_handler.fmp_api import fetch_quote
-from upload_csv.utils.convert_to_decimal import convert_to_decimal
-from upload_csv.utils.convert_to_native_datetime import convert_to_naive_datetime
-from upload_csv.utils.convert_to_boolean import convert_to_boolean
+from utils.convert_to_decimal import convert_to_decimal
+from utils.convert_to_native_datetime import convert_to_naive_datetime
+from utils.convert_to_boolean import convert_to_boolean
 # Modal imports
 from upload_csv.models import TradeUploadBlofin
 # Pachage and library imports
