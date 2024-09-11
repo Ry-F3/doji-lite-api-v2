@@ -5,7 +5,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
 import pandas as pd
+from .serializers import FileUploadSerializer, SaveTradeSerializer
 from django_filters.rest_framework import DjangoFilterBackend
+from .models import TradeUploadBlofin
 
 class CsvTradeView(generics.ListAPIView):
     serializer_class = SaveTradeSerializer
@@ -27,10 +29,10 @@ class DeleteAllTradesAndLiveTradesView(generics.DestroyAPIView):
         # Delete all trades
         trade_count, _ = TradeUploadBlofin.objects.all().delete()
         # Delete all live trades
-        live_trade_count, _ = LiveTrades.objects.all().delete()
+        # live_trade_count, _ = LiveTrades.objects.all().delete()
 
         return Response({
-            "message": f"{trade_count} trades and {live_trade_count} live trades deleted."
+            "message": f"{trade_count} trades live trades deleted."
         }, status=status.HTTP_204_NO_CONTENT)
 
 
