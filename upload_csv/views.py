@@ -5,9 +5,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
 import pandas as pd
+import time
 from .serializers import FileUploadSerializer, SaveTradeSerializer
 from django_filters.rest_framework import DjangoFilterBackend
+from upload_csv.exchange.blofin.blofin_csv_handler import BloFinHandler
+from upload_csv.exchange.blofin.csv_processor import CsvProcessor
 from .models import TradeUploadBlofin
+
 
 class CsvTradeView(generics.ListAPIView):
     serializer_class = SaveTradeSerializer
@@ -37,7 +41,7 @@ class DeleteAllTradesAndLiveTradesView(generics.DestroyAPIView):
 
 
 class UploadFileView(generics.CreateAPIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     serializer_class = FileUploadSerializer
     http_method_names = ['post', 'options', 'head']
 
@@ -50,36 +54,28 @@ class UploadFileView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         start_time = time.time()
-        logger.debug(f"Handling POST request. Headers: {request.headers}")
-        logger.debug(f"Request data: {request.data}")
 
         owner = request.user
-        logger.debug(f"Request user: {owner}")
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         file = serializer.validated_data['file']
         exchange = serializer.validated_data.get('exchange', None)
 
-        logger.debug(f"Exchange value: {exchange}")
-
         if exchange != 'BloFin':
-            logger.warning(f"Exchange '{exchange}' is not supported.")
             return Response({"error": "Sorry, under construction."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Process the CSV using the CSVProcessor class
-        processor = CSVProcessor(owner, exchange)
+        processor = CsvProcessor(owner, exchange)
         result = processor.process_csv_file(file)
 
         if isinstance(result, Response):
             return result  # Return early if an error occurred during CSV processing
 
-        new_trades_count, duplicates, canceled_count, live_price_fetches_count = result
+        new_trades_count, duplicates, canceled_count = result
 
         end_time = time.time()  # End timing
         elapsed_time = end_time - start_time  # Calculate the elapsed time
-        logger.debug(f"CSV upload and processing took {
-                     elapsed_time:.2f} seconds.")
 
         response_message = {
             "status": "success",
@@ -87,5 +83,4 @@ class UploadFileView(generics.CreateAPIView):
             "time_taken": f"{elapsed_time:.2f} seconds"
         }
 
-        logger.debug(f"Response message: {response_message}")
         return Response(response_message, status=status.HTTP_201_CREATED)

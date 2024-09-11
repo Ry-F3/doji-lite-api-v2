@@ -38,23 +38,23 @@ class FormattingUtils:
         return FormattingUtils.formatted_value(original_filled_quantity, default=default)
 
     @staticmethod
-    def formatted_pnl(pnl, avg_fill, price, is_open, default='N/A'):
+    def formatted_pnl(pnl, avg_fill, price, default='N/A'):
         """Format pnl based on conditions."""
         if avg_fill == price:
             return '--'
 
-        if is_open and price == Decimal('0.0') and pnl == Decimal('0.0'):
+        if price == Decimal('0.0') and pnl == Decimal('0.0'):
             return '--'
 
         return FormattingUtils.formatted_value(pnl) if pnl is not None else default
 
     @staticmethod
-    def formatted_percentage(percentage, avg_fill, price, is_open, default='N/A'):
+    def formatted_percentage(percentage, avg_fill, price, default='N/A'):
         """Format percentage based on conditions."""
         if avg_fill == price:
             return '--'
 
-        if  is_open and price == Decimal('0.0') and percentage == Decimal('0.0'):
+        if  price == Decimal('0.0') and percentage == Decimal('0.0'):
             return '--'
 
         return f"{Decimal(percentage):.2f}%" if percentage is not None else default

@@ -1,8 +1,6 @@
-from upload_csv.calculations.long_short import calculate_trade_pnl_and_percentage
-from upload_csv.api_handler.fmp_api import fetch_quote
-from utils.convert_to_decimal import convert_to_decimal
-from utils.convert_to_native_datetime import convert_to_naive_datetime
-from utils.convert_to_boolean import convert_to_boolean
+from upload_csv.exchange.blofin.utils.convert_to_decimal import convert_to_decimal
+from upload_csv.exchange.blofin.utils.convert_to_native_datetime import convert_to_naive_datetime
+from upload_csv.exchange.blofin.utils.convert_to_boolean import convert_to_boolean
 # Modal imports
 from upload_csv.models import TradeUploadBlofin
 # Pachage and library imports
@@ -120,30 +118,30 @@ class BloFinHandler:
             is_matched = False
             is_open = False
 
-            if is_open:
-                symbol = row.get('Underlying Asset', '')
-                current_price_data = fetch_quote(symbol)
-                current_price = Decimal('0.0')
+            # if is_open:
+            #     symbol = row.get('Underlying Asset', '')
+            #     current_price_data = fetch_quote(symbol)
+            #     current_price = Decimal('0.0')
 
-                if current_price_data:
-                    # Get the first item from the list
-                    current_price_data = current_price_data[0]
-                    current_price = convert_to_decimal(
-                        current_price_data.get('price', '0.0'))
+            #     if current_price_data:
+            #         # Get the first item from the list
+            #         current_price_data = current_price_data[0]
+            #         current_price = convert_to_decimal(
+            #             current_price_data.get('price', '0.0'))
 
-                leverage = convert_to_decimal(row.get('Leverage', '1.0'))
-                long_short = row.get('Side', 'Unknown')
+            #     leverage = convert_to_decimal(row.get('Leverage', '1.0'))
+            #     long_short = row.get('Side', 'Unknown')
 
-                try:
-                    pnl_percentage, pnl = calculate_trade_pnl_and_percentage(
-                        current_price, avg_fill, leverage, long_short, filled_quantity
-                    )
-                    price = current_price
-                except DivisionByZero:
+            #     try:
+            #         pnl_percentage, pnl = calculate_trade_pnl_and_percentage(
+            #             current_price, avg_fill, leverage, long_short, filled_quantity
+            #         )
+            #         price = current_price
+            #     except DivisionByZero:
 
-                    pnl_percentage, pnl = Decimal('0.0'), Decimal('0.0')
-            else:
-                price = price
+            #         pnl_percentage, pnl = Decimal('0.0'), Decimal('0.0')
+            # else:
+            #     price = price
 
             # Define the tolerance level
             TOLERANCE = Decimal('0.0001')
