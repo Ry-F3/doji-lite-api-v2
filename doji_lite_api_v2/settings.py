@@ -123,6 +123,7 @@ if 'CLIENT_ORIGIN' in os.environ:
 
 # CORS_ALLOW_ALL_ORIGINS = True
 
+
 CORS_ALLOW_CREDENTIALS = True
 
 
