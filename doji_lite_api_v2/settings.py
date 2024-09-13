@@ -105,9 +105,9 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -127,7 +127,7 @@ if 'CLIENT_ORIGIN' in os.environ:
 CORS_ALLOW_CREDENTIALS = True
 
 
-CORS_ALLOWED_ORIGIN_REGEXES = [r"^https://.*\.gitpod\.io$",]
+CORS_ALLOWED_ORIGIN_REGEXES = [r"^https://.*\.gitpod\.io$",g]
 
 ROOT_URLCONF = 'doji_lite_api_v2.urls'
 
@@ -148,6 +148,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'doji_lite_api_v2.wsgi.application'
+
 
 
 # Database
