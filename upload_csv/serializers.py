@@ -1,9 +1,16 @@
 from rest_framework import serializers
-from .models import TradeUploadBlofin
+from .models import TradeUploadBlofin, FileName
 from collections import defaultdict
 from decimal import Decimal
 from django.contrib.auth.models import User
 from upload_csv.utils.convert_fields_to_readable import FormattingUtils
+
+
+
+class FileNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FileName
+        fields = ['id', 'file_name', 'trade_count', 'owner']
 
 
 class FileUploadSerializer(serializers.Serializer):

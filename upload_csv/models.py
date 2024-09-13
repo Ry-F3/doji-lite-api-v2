@@ -46,3 +46,11 @@ class TradeUploadBlofin(models.Model):
 
     def __str__(self):
         return f"{self.underlying_asset} - {self.side}"
+
+class FileName(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='file_names')
+    file_name = models.CharField(max_length=250, unique=True)
+    trade_count = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.file_name

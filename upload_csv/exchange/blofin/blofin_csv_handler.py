@@ -106,9 +106,6 @@ class BloFinHandler:
                                         'BLURUSDT', 'MATICUSDT', 'SEIUSDT', 'NEARUSDT']:
                 return None
 
-            # if underlying_asset not in ['ARBUSDT', 'BTCUSDT', 'ETHUSDT',
-            #                             'RUNEUSDT']:
-            #      return None
 
             avg_fill = convert_to_decimal(row['Avg Fill'])
             pnl = convert_to_decimal(row['PNL'])
