@@ -35,28 +35,31 @@ class FileNameListView(generics.ListAPIView):
         return FileName.objects.all().order_by('file_name')
 
 
-
 class DeleteTradesByFileNameView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, *args, **kwargs):
-        file_name = request.query_params.get('file_name')
-        
-        if not file_name:
-            return Response({"detail": "File name is required."}, status=status.HTTP_400_BAD_REQUEST)
+        file_id = kwargs.get('pk')
+
+        if not file_id:
+            return Response({"detail": "File ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Retrieve the FileName entry by ID
+        try:
+            file_name_entry = FileName.objects.get(id=file_id)
+        except FileName.DoesNotExist:
+            return Response({"detail": "File not found."}, status=status.HTTP_404_NOT_FOUND)
 
         # Delete trades for the specific file name
-        trades_deleted, _ = TradeUploadBlofin.objects.filter(file_name=file_name).delete()
-        
-        # Also delete the file name record from FileName model
-        file_name_record = FileName.objects.filter(file_name=file_name)
-        if file_name_record.exists():
-            file_name_record.delete()
-        
-        return Response({
-            "message": f"{trades_deleted} trades for file '{file_name}' deleted."
-        }, status=status.HTTP_204_NO_CONTENT)
+        trade_count, _ = TradeUploadBlofin.objects.filter(
+            file_name=file_name_entry.file_name).delete()
 
+        # Delete the FileName entry itself
+        file_name_entry.delete()
+
+        return Response({
+            "message": f"{trade_count} trades for file '{file_name_entry.file_name}' deleted."
+        }, status=status.HTTP_204_NO_CONTENT)
 
 
 class UploadFileView(generics.CreateAPIView):
@@ -79,7 +82,7 @@ class UploadFileView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         file = serializer.validated_data['file']
-        file_name = file.name # Capture the file name
+        file_name = file.name  # Capture the file name
         exchange = serializer.validated_data.get('exchange', None)
 
         if exchange != 'BloFin':
@@ -95,7 +98,8 @@ class UploadFileView(generics.CreateAPIView):
         new_trades_count, duplicates, canceled_count = result
 
         # Update FileName model
-        file_name_entry, created = FileName.objects.get_or_create(owner=owner, file_name=file_name)
+        file_name_entry, created = FileName.objects.get_or_create(
+            owner=owner, file_name=file_name)
         file_name_entry.trade_count += new_trades_count
         file_name_entry.save()
 
