@@ -10,7 +10,7 @@ class TradeUploadBlofin(models.Model):
     ]
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='blofin_futures_csv')
-    file_name = models.CharField(max_length=35)
+    file_name = models.CharField(max_length=250)
     underlying_asset = models.CharField(max_length=10)
     margin_mode = models.CharField(max_length=10)
     leverage = models.IntegerField()
