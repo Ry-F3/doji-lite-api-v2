@@ -64,8 +64,8 @@ FMP_API_KEY = os.getenv('FMP_API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEV' in os.environ
 
-ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOST'),  'localhost', 
-                '8000-ryf3-dojiliteapiv2-guxcl9a7ol1.ws-eu116.gitpod.io']
+ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOST'),  'localhost',
+                 '8000-ryf3-dojiliteapiv2-guxcl9a7ol1.ws-eu116.gitpod.io']
 
 CSRF_TRUSTED_ORIGINS = [
     'https://8000-ryf3-dojiliteapiv2-guxcl9a7ol1.ws-eu116.gitpod.io',
