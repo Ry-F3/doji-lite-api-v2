@@ -4,14 +4,11 @@ from upload_csv.exchange.blofin.utils.convert_to_boolean import convert_to_boole
 # Modal imports
 from upload_csv.models import TradeUploadBlofin
 # Pachage and library imports
-from decimal import Decimal, DivisionByZero,  InvalidOperation
+from decimal import Decimal, InvalidOperation
 from datetime import datetime
-from django.core.paginator import Paginator, EmptyPage
 from django.utils import timezone
 from django.db.models import Sum, Q
-from collections import deque, defaultdict
 import requests
-
 import pytz
 
 
