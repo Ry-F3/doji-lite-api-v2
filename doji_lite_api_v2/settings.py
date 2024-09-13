@@ -127,7 +127,7 @@ if 'CLIENT_ORIGIN' in os.environ:
 CORS_ALLOW_CREDENTIALS = True
 
 
-CORS_ALLOWED_ORIGIN_REGEXES = [r"^https://.*\.gitpod\.io$",g]
+CORS_ALLOWED_ORIGIN_REGEXES = [r"^https://.*\.gitpod\.io$"]
 
 ROOT_URLCONF = 'doji_lite_api_v2.urls'
 
