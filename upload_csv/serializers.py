@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import TradeUploadBlofin, FileName
+from .models import TradeUploadBlofin, FileName, LiveTrades
 from collections import defaultdict
 from decimal import Decimal
 from django.contrib.auth.models import User
@@ -17,6 +17,14 @@ class FileUploadSerializer(serializers.Serializer):
     file = serializers.FileField()
     exchange = serializers.ChoiceField(
         choices=[('BloFin', 'BloFin'), ('OtherExchange', 'Other Exchange')])
+
+class LiveTradesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LiveTrades
+        fields = ['id', 'owner', 'asset',
+                  'total_quantity', 'long_short', 'live_price',
+                   'live_fill', 'live_pnl', 'live_percentage', 'trade_ids',
+                    'last_updated', 'is_live']
 
 
 class SaveTradeSerializer(serializers.ModelSerializer):

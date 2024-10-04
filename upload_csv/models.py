@@ -54,3 +54,35 @@ class FileName(models.Model):
 
     def __str__(self):
         return self.file_name
+
+class LiveTrades(models.Model):
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='live_trades')
+    asset = models.CharField(max_length=10)
+    total_quantity = models.DecimalField(max_digits=20, decimal_places=10)
+    long_short = models.CharField(max_length=4, blank=True, null=True)
+    live_fill = models.DecimalField(
+        max_digits=20, decimal_places=10, blank=True, null=True)
+    live_price = models.DecimalField(
+        max_digits=20, decimal_places=10, blank=True, null=True)
+    live_pnl = models.DecimalField(
+        max_digits=20, decimal_places=2, null=True, blank=True)
+    live_percentage = models.DecimalField(
+        max_digits=20, decimal_places=2, null=True, blank=True)
+    last_updated = models.DateTimeField(auto_now=True)
+    trade_ids = models.TextField(default='[]')
+    is_live = models.BooleanField(default=False)
+
+    def get_trade_ids(self):
+        # Deserialize JSON string to list
+        return json.loads(self.trade_ids)
+
+    def set_trade_ids(self, trade_ids):
+        self.trade_ids = json.dumps(trade_ids)
+
+    class Meta:
+        unique_together = ('owner', 'asset')
+        ordering = ['-last_updated']
+
+    def __str__(self):
+        return f"{self.asset} - Quantity: {self.total_quantity}"

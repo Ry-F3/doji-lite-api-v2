@@ -18,6 +18,11 @@ import dj_database_url
 if os.path.exists('env.py'):
     import env
 
+# Celery settings
+CELERY_BROKER_URL = f'redis://:{os.environ["REDIS_PASSWORD"]}@127.0.0.1:6379/1'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
 CLOUDINARY_STORAGE = {
     'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
 }
