@@ -66,6 +66,20 @@ class DeleteTradesByFileNameView(generics.DestroyAPIView):
         }, status=status.HTTP_204_NO_CONTENT)
 
 
+class DeleteAllTradesView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        owner = request.user
+
+        # Delete all trades for the authenticated user
+        trade_count, _ = TradeUploadBlofin.objects.filter(owner=owner).delete()
+
+        return Response({
+            "message": f"Successfully deleted {trade_count} trades."
+        }, status=status.HTTP_204_NO_CONTENT)
+
+
 class UploadFileView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FileUploadSerializer
