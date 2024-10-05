@@ -127,9 +127,6 @@ class UploadFileView(generics.CreateAPIView):
         file_name_entry.save()
         logger.debug(f"Updated file name entry: {file_name_entry.file_name}, Trade count: {file_name_entry.trade_count}")
 
-        # matcher_id = TradeIdMatcher(owner)
-        # matcher_id.check_trade_ids()
-
         end_time = time.time()  # End timing
         elapsed_time = end_time - start_time  # Calculate the elapsed time
 
