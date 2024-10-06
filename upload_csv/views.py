@@ -77,7 +77,7 @@ class DeleteAllTradesView(generics.DestroyAPIView):
 
         return Response({
             "message": f"Successfully deleted {trade_count} trades."
-        }, status=status.HTTP_204_NO_CONTENT)
+        }, status=status.HTTP_204_NO_CONTENT)       
 
 
 class UploadFileView(generics.CreateAPIView):

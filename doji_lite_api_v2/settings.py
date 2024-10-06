@@ -164,21 +164,11 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
         },
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'celery_tasks.log',
-        },
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'file'],
-            'level': 'DEBUG',
-        },
-        'doji_lite_api_v2': {  # Replace with your app's name
-            'handlers': ['console', 'file'],
-            'level': 'DEBUG',
-            'propagate': True,
+            'handlers': ['console'],
+            'level': 'WARNING',
         },
     },
 }
