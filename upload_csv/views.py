@@ -11,7 +11,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from upload_csv.exchange.blofin.blofin_csv_handler import BloFinHandler
 from upload_csv.exchange.blofin.csv_processor import CsvProcessor
 from .models import TradeUploadBlofin, FileName
-from .tasks import  process_trade_ids_in_background, process_asset_in_background
+from .tasks import  process_trade_ids_in_background, process_asset_in_background, process_csv_file_async
 from .trade_matcher import TradeIdMatcher
 from django.db.models import Count
 import logging
@@ -125,21 +125,15 @@ class UploadFileView(generics.CreateAPIView):
         logger.debug(f"New trades count: {new_trades_count}, Duplicates: {duplicates}, Canceled: {canceled_count}")
 
 
-        # Fetch asset names from BlofinModel for the current user
-        asset_names = TradeUploadBlofin.objects.filter(owner=owner).values_list('underlying_asset', flat=True)  # Replace 'asset_name' with the actual field name
-        logger.debug(f"Retrieved asset names: {list(asset_names)}")  # Log the asset names
-
-        for asset_name in asset_names:  # Loop through each asset name
-            process_trade_ids_in_background.delay(owner.id)  # Process each asset
-            process_asset_in_background(owner.id, asset_name)
-            logger.debug(f"Triggered background task for asset processing: {asset_name}")
-
-
         # Update FileName model
         file_name_entry, created = FileName.objects.get_or_create(owner=owner, file_name=file_name)
         file_name_entry.trade_count += new_trades_count
         file_name_entry.save()
         logger.debug(f"Updated file name entry: {file_name_entry.file_name}, Trade count: {file_name_entry.trade_count}")
+
+        # Push CSV processing to the background using Celery
+        process_csv_file_async.delay(owner.id, file_name_entry.id, file.read().decode('utf-8'), exchange)
+
 
         end_time = time.time()  # End timing
         elapsed_time = end_time - start_time  # Calculate the elapsed time
@@ -152,3 +146,5 @@ class UploadFileView(generics.CreateAPIView):
 
         logger.debug(f"Response message: {response_message}")
         return Response(response_message, status=status.HTTP_201_CREATED)
+
+    
