@@ -14,22 +14,16 @@ from pathlib import Path
 import os
 import re
 import dj_database_url
-from celery import Celery
 
 if os.path.exists('env.py'):
     import env
 
 # Celery settings
 # CELERY_BROKER_URL = f'redis://:{os.environ["REDIS_PASSWORD"]}@127.0.0.1:6379/1'
-app = Celery('doji_lite_api_v2')
-# Configure Celery with environment variables or default values
-app.conf.update(
-    broker_url=os.environ.get('REDIS_URL'),  # Make sure to use 'broker_url'
-    result_backend=os.environ.get('REDIS_URL'),  # Use 'result_backend'
-    accept_content=['json'],  # Update to new naming if necessary
-    task_serializer='json',  # Update to new naming if necessary
-    worker_concurrency=4  # Update to new naming if necessary
-)
+CELERY_BROKER_URL = os.environ.get("REDIS_URL")
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 CLOUDINARY_STORAGE = {
     'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
