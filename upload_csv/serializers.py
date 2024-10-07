@@ -10,7 +10,7 @@ from upload_csv.utils.convert_fields_to_readable import FormattingUtils
 class FileNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileName
-        fields = ['id', 'file_name', 'trade_count', 'owner']
+        fields = ['id', 'file_name', 'trade_count', 'owner', 'processing', 'cancel_processing']
 
 
 class FileUploadSerializer(serializers.Serializer):
