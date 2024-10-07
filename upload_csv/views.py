@@ -49,21 +49,27 @@ class DeleteTradesByFileNameView(generics.DestroyAPIView):
             return Response({"detail": "File ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
+            # Get the file name entry
             file_name_entry = FileName.objects.get(id=file_id)
         except FileName.DoesNotExist:
             return Response({"detail": "File not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        # Set the cancellation flag before proceeding
-        file_name_entry.cancel_processing = True
-        file_name_entry.save()
+        # Set the cancellation flag for all files associated with the user
+        owner = request.user
+        FileName.objects.filter(owner=owner).update(cancel_processing=True)
 
         # Proceed with deletion logic
         trade_count, _ = TradeUploadBlofin.objects.filter(file_name=file_name_entry.file_name).delete()
         file_name_entry.delete()
 
+        # Reset cancellation flags after deletion (optional)
+        # Here, you can reset any flags if needed
+        # FileName.objects.filter(owner=owner).update(cancel_processing=False)
+
         return Response({
             "message": f"{trade_count} trades for file '{file_name_entry.file_name}' deleted."
         }, status=status.HTTP_204_NO_CONTENT)
+
 
 
 class DeleteAllTradesView(generics.DestroyAPIView):
