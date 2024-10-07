@@ -44,27 +44,27 @@ class DeleteTradesByFileNameView(generics.DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         file_id = kwargs.get('pk')
+        force_delete = request.query_params.get('force', 'false') == 'true'
 
         if not file_id:
             return Response({"detail": "File ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # Get the file name entry
             file_name_entry = FileName.objects.get(id=file_id)
         except FileName.DoesNotExist:
             return Response({"detail": "File not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        # Set the cancellation flag for all files associated with the user
-        owner = request.user
-        FileName.objects.filter(owner=owner).update(cancel_processing=True)
+        # If not forced, check if the file is currently processing
+        if not force_delete and file_name_entry.cancel_processing:
+            return Response({"detail": "File is currently processing and cannot be deleted."}, status=status.HTTP_403_FORBIDDEN)
+
+        # Set the cancellation flag before proceeding
+        file_name_entry.cancel_processing = True
+        file_name_entry.save()
 
         # Proceed with deletion logic
         trade_count, _ = TradeUploadBlofin.objects.filter(file_name=file_name_entry.file_name).delete()
         file_name_entry.delete()
-
-        # Reset cancellation flags after deletion (optional)
-        # Here, you can reset any flags if needed
-        # FileName.objects.filter(owner=owner).update(cancel_processing=False)
 
         return Response({
             "message": f"{trade_count} trades for file '{file_name_entry.file_name}' deleted."
@@ -78,12 +78,22 @@ class DeleteAllTradesView(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         owner = request.user
 
+        # Check if the force delete flag is set
+        force_delete = request.query_params.get('force', 'false') == 'true'
+
+        # You might want to include some logic here to check if trades are processing.
+        if not force_delete:
+            # Implement your check logic here if needed
+            # For example, checking if any trades are currently being processed
+            # If processing is detected, return a response
+            return Response({"detail": "Cannot delete trades while they are being processed."}, status=status.HTTP_403_FORBIDDEN)
+
         # Delete all trades for the authenticated user
         trade_count, _ = TradeUploadBlofin.objects.filter(owner=owner).delete()
 
         return Response({
             "message": f"Successfully deleted {trade_count} trades."
-        }, status=status.HTTP_204_NO_CONTENT)       
+        }, status=status.HTTP_204_NO_CONTENT)
 
 
 class UploadFileView(generics.CreateAPIView):
