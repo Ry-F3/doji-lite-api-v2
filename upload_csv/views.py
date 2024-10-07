@@ -48,17 +48,17 @@ class DeleteTradesByFileNameView(generics.DestroyAPIView):
         if not file_id:
             return Response({"detail": "File ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Retrieve the FileName entry by ID
         try:
             file_name_entry = FileName.objects.get(id=file_id)
         except FileName.DoesNotExist:
             return Response({"detail": "File not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        # Delete trades for the specific file name
-        trade_count, _ = TradeUploadBlofin.objects.filter(
-            file_name=file_name_entry.file_name).delete()
+        # Set the cancellation flag before proceeding
+        file_name_entry.cancel_processing = True
+        file_name_entry.save()
 
-        # Delete the FileName entry itself
+        # Proceed with deletion logic
+        trade_count, _ = TradeUploadBlofin.objects.filter(file_name=file_name_entry.file_name).delete()
         file_name_entry.delete()
 
         return Response({

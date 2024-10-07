@@ -46,6 +46,10 @@ def process_csv_file_async(owner_id, file_name_entry_id, csv_content, exchange):
         file_name_entry = FileName.objects.get(id=file_name_entry_id)
         logger.debug(f"Starting to process CSV for user: {owner.username}")
 
+        # Set processing flag to True
+        file_name_entry.processing = True
+        file_name_entry.save()
+
         # Fetch asset names to be processed
         asset_names = TradeUploadBlofin.objects.filter(owner=owner).values_list('underlying_asset', flat=True)
         logger.debug(f"Retrieved asset names: {list(asset_names)}")
@@ -56,5 +60,15 @@ def process_csv_file_async(owner_id, file_name_entry_id, csv_content, exchange):
             process_asset_in_background.delay(owner.id, asset_name)  # Process trades for each asset
             logger.debug(f"Triggered background task for asset processing: {asset_name}")
 
+            # Check for cancellation after processing each asset
+            if file_name_entry.cancel_processing:
+                logger.info("Processing cancelled. Exiting.")
+                return  # Exit the task
+                
     except Exception as e:
         logger.error(f"Error processing CSV file: {str(e)}")
+    finally:
+        # Reset processing flag
+        file_name_entry.processing = False
+        file_name_entry.cancel_processing = False  # Reset cancel flag
+        file_name_entry.save()
