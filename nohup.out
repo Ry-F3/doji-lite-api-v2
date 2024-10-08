@@ -7246,3 +7246,5 @@ NameError: name 'connection' is not defined
 [2024-10-08 18:53:21,782: INFO/MainProcess] Task upload_csv.tasks.process_asset_in_background[e643df36-dd13-434c-9b48-27652a38faee] received
 [2024-10-08 18:53:21,805: WARNING/ForkPoolWorker-15] No trades found for asset RUNEUSDT. Skipping revert.
 [2024-10-08 18:53:21,806: INFO/ForkPoolWorker-15] Task upload_csv.tasks.process_asset_in_background[e643df36-dd13-434c-9b48-27652a38faee] succeeded in 0.003730010001163464s: None
+[2024-10-08 18:59:46,768: INFO/MainProcess] sync with celery@d5e9daeb-ed94-4beb-8cac-d2bf7b6e0f09
+[2024-10-08 19:00:24,825: INFO/MainProcess] sync with celery@88752b29-c3de-4957-a694-98223a134101
