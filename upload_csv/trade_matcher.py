@@ -112,10 +112,14 @@ class TradeIdMatcher:
     def __init__(self, owner):
         self.owner = owner
 
-    def check_trade_ids(self):
+    def check_trade_ids(self, chunk_size=100):
         trades = TradeUploadBlofin.objects.filter(owner=self.owner)
 
         asset_ids = {}
+
+        # Process trades in chunks
+        for i in range(0, trades.count(), chunk_size):
+            chunk = trades[i:i + chunk_size]  # Fetch a chunk of trades
 
         for trade in trades:
             asset = trade.underlying_asset
@@ -133,6 +137,6 @@ class TradeIdMatcher:
 
         # Process each asset name that was found
         for asset_name in asset_ids.keys():
-            processor.process_assets(asset_name, chunk_size=100)
+            processor.process_assets(asset_name, chunk_size=chunk_size)
 
         return asset_ids
