@@ -16,11 +16,36 @@ class TradeMatcherProcessor:
 
     def process_assets(self, asset_name, chunk_size=None):
         logger.debug(f"Starting asset processing for: {asset_name}")
+
+        # Process trades that have not yet been marked as processed
+        unprocessed_trades = TradeUploadBlofin.objects.filter(
+            owner=self.owner,
+            underlying_asset=asset_name,
+            is_processed=False  # Only fetch unprocessed trades
+        )
+
+        # If there are no unprocessed trades, stop processing
+        if not unprocessed_trades.exists():
+            logger.info(f"No more unprocessed trades for asset {asset_name}. Stopping processing.")
+            return 0
+
+        # Revert filled quantities if necessary (for matching)
         self.revert_filled_quantity_values(asset_name)
+
+        # Run the matching algorithm
         self.process_asset_match(asset_name)
 
-        # Return 0 if all trades for this asset have been processed
-        remaining_trades = TradeUploadBlofin.objects.filter(owner=self.owner, underlying_asset=asset_name).count()
+        # After processing, mark the trades as processed
+        unprocessed_trades.update(is_processed=True)
+        logger.debug(f"Marked trades as processed for asset: {asset_name}")
+
+        # Return the number of remaining unprocessed trades
+        remaining_trades = TradeUploadBlofin.objects.filter(
+            owner=self.owner,
+            underlying_asset=asset_name,
+            is_processed=False
+        ).count()
+        
         return remaining_trades
 
     def revert_filled_quantity_values(self, asset_name):
@@ -136,24 +161,26 @@ class TradeIdMatcher:
         self.owner = owner
 
     def check_trade_ids(self, chunk_size=100):
-        trades = TradeUploadBlofin.objects.filter(owner=self.owner)
+        # Fetch unprocessed trades only
+        unprocessed_trades = TradeUploadBlofin.objects.filter(
+            owner=self.owner,
+            is_processed=False  # Only process unprocessed trades
+        )
+
+        if not unprocessed_trades.exists():
+            logger.info("No unprocessed trade IDs found. Stopping.")
+            return {}
+
+        asset_ids = {}
 
         asset_ids = {}
 
         # Process trades in chunks
-        for i in range(0, trades.count(), chunk_size):
-            chunk = trades[i:i + chunk_size]  # Fetch a chunk of trades
-
-        for trade in trades:
+        for trade in unprocessed_trades:
             asset = trade.underlying_asset
-            if asset:
-                if asset not in asset_ids:
-                    asset_ids[asset] = []
-                asset_ids[asset].append(trade.id)
-
-        logger.debug("Assets and their trade IDs:")
-        for asset, ids in asset_ids.items():
-            logger.debug(f"Asset: {asset}, Trade IDs: {ids}")
+            if asset not in asset_ids:
+                asset_ids[asset] = []
+            asset_ids[asset].append(trade.id)
 
         # Initialize TradeMatcherProcessor
         processor = TradeMatcherProcessor(owner=self.owner)

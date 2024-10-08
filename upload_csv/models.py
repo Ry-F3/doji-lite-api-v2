@@ -38,6 +38,7 @@ class TradeUploadBlofin(models.Model):
     is_matched = models.BooleanField(default=None)
     is_partially_matched = models.BooleanField(default=False)
     last_updated = models.DateTimeField(auto_now=True)
+    is_processed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-order_time']
