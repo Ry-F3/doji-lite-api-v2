@@ -1,7 +1,7 @@
 import json
 from django.utils import timezone
 from django.db import transaction
-from .models import TradeUploadBlofin
+from .models import TradeUploadBlofin, TradeProcessingStatus, FileName
 from decimal import Decimal
 import logging
 
