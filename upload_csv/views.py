@@ -54,7 +54,7 @@ class DeleteTradesByFileNameView(generics.DestroyAPIView):
         except FileName.DoesNotExist:
             return Response({"detail": "File not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        # If not forced, check if the file is currently processing
+        # Check if the file is currently processing
         if not force_delete and file_name_entry.cancel_processing:
             return Response({"detail": "File is currently processing and cannot be deleted."}, status=status.HTTP_403_FORBIDDEN)
 
