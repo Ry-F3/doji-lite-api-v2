@@ -22,16 +22,19 @@ class TradeMatcherProcessor:
     def revert_filled_quantity_values(self, asset_name):
         """Revert all trades' filled_quantity values to their original_filled_quantity before processing."""
         with transaction.atomic():
-            trades = TradeUploadBlofin.objects.filter(
+            # Retrieve the queryset first
+            trades_queryset = TradeUploadBlofin.objects.filter(
                 owner=self.owner,
                 underlying_asset=asset_name
-            ).iterator(chunk_size=100)
+            )
 
-            if not trades.exists():
+            # Check if any trades exist
+            if not trades_queryset.exists():
                 logger.warning(f"No trades found for asset {asset_name}. Skipping revert.")
                 return
 
-            for trade in trades:
+            # Use iterator for memory efficiency
+            for trade in trades_queryset.iterator(chunk_size=100):
                 original_value = trade.original_filled_quantity
                 if original_value is None:
                     logger.warning(f"Trade ID={trade.id} does not have an original_filled_quantity. Skipping revert.")
