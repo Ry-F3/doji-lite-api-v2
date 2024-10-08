@@ -41,7 +41,7 @@ class SaveTradeSerializer(serializers.ModelSerializer):
                   'leverage', 'order_time', 'side', 'avg_fill_formatted', 'price_formatted',
                   'filled_quantity_formatted', 'original_filled_quantity_formatted', 'pnl_formatted',
                   'pnl_percentage_formatted', 'fee', 'exchange',
-                  'trade_status', 'is_open', 'is_matched', 'last_updated']
+                  'trade_status', 'is_open', 'is_matched', 'last_updated', 'is_processed']
 
     def get_avg_fill_formatted(self, obj):
         return FormattingUtils.formatted_value(obj.avg_fill)
