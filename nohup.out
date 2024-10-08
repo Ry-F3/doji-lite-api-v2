@@ -6614,3 +6614,168 @@ Traceback (most recent call last):
     logger.debug(f"Completed processing trade IDs: {asset_ids}")
     ^^^^^^^^^^
 NameError: name 'connection' is not defined
+[2024-10-08 18:06:42,672: INFO/MainProcess] sync with celery@4ea51168-e77e-4c11-a0f7-738dfa19ef39
+[2024-10-08 18:06:54,447: INFO/MainProcess] sync with celery@5b72e79d-3dc3-4df4-a82c-faffb6ec7d95
+[2024-10-08 18:09:45,060: INFO/MainProcess] Task upload_csv.tasks.process_trade_ids_in_background[55c73214-213f-4f06-b1da-c64a4ce2dfb0] received
+[2024-10-08 18:09:45,093: ERROR/ForkPoolWorker-15] Task upload_csv.tasks.process_trade_ids_in_background[55c73214-213f-4f06-b1da-c64a4ce2dfb0] raised unexpected: NameError("name 'connection' is not defined")
+Traceback (most recent call last):
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 453, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 736, in __protected_call__
+    return self.run(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/doji-lite-api-v2/upload_csv/tasks.py", line 21, in process_trade_ids_in_background
+    logger.debug(f"Completed processing trade IDs: {asset_ids}")
+    ^^^^^^^^^^
+NameError: name 'connection' is not defined
+[2024-10-08 18:09:45,201: INFO/MainProcess] Task upload_csv.tasks.process_asset_in_background[e14dd8b4-2755-4de8-9882-3ea496625588] received
+[2024-10-08 18:09:46,860: INFO/MainProcess] Task upload_csv.tasks.process_asset_in_background[3f32dc2e-eafb-4afe-b477-634dc7e26aa8] received
+[2024-10-08 18:09:47,551: INFO/MainProcess] Task upload_csv.tasks.process_trade_ids_in_background[67ff0160-37f2-4dae-81a1-a0295077e616] received
+[2024-10-08 18:09:48,117: INFO/MainProcess] Task upload_csv.tasks.process_trade_ids_in_background[c8e9b2da-0632-4779-b829-a8a3faeb2195] received
+[2024-10-08 18:09:49,927: INFO/MainProcess] Task upload_csv.tasks.process_trade_ids_in_background[18a66284-0b6a-418f-bf5f-c0d1955d05f7] received
+[2024-10-08 18:09:50,165: WARNING/ForkPoolWorker-15] No trades found for asset RUNEUSDT. Skipping revert.
+[2024-10-08 18:09:50,167: INFO/ForkPoolWorker-15] Task upload_csv.tasks.process_asset_in_background[e14dd8b4-2755-4de8-9882-3ea496625588] succeeded in 0.0038020399952074513s: None
+[2024-10-08 18:09:51,549: WARNING/ForkPoolWorker-15] No trades found for asset BTCUSDT. Skipping revert.
+[2024-10-08 18:09:51,551: INFO/ForkPoolWorker-15] Task upload_csv.tasks.process_asset_in_background[3f32dc2e-eafb-4afe-b477-634dc7e26aa8] succeeded in 0.004456779999600258s: None
+[2024-10-08 18:09:51,731: INFO/MainProcess] Task upload_csv.tasks.process_trade_ids_in_background[ea83b477-756c-4860-86ab-1233514a0097] received
+[2024-10-08 18:09:52,271: ERROR/ForkPoolWorker-15] Task upload_csv.tasks.process_trade_ids_in_background[67ff0160-37f2-4dae-81a1-a0295077e616] raised unexpected: NameError("name 'connection' is not defined")
+Traceback (most recent call last):
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 453, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 736, in __protected_call__
+    return self.run(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/doji-lite-api-v2/upload_csv/tasks.py", line 21, in process_trade_ids_in_background
+    logger.debug(f"Completed processing trade IDs: {asset_ids}")
+    ^^^^^^^^^^
+NameError: name 'connection' is not defined
+[2024-10-08 18:09:52,368: INFO/MainProcess] Task upload_csv.tasks.process_asset_in_background[b6dc3b12-6288-4a4e-8bde-59b9bf359748] received
+[2024-10-08 18:09:53,083: ERROR/ForkPoolWorker-15] Task upload_csv.tasks.process_trade_ids_in_background[c8e9b2da-0632-4779-b829-a8a3faeb2195] raised unexpected: NameError("name 'connection' is not defined")
+Traceback (most recent call last):
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 453, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 736, in __protected_call__
+    return self.run(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/doji-lite-api-v2/upload_csv/tasks.py", line 21, in process_trade_ids_in_background
+    logger.debug(f"Completed processing trade IDs: {asset_ids}")
+    ^^^^^^^^^^
+NameError: name 'connection' is not defined
+[2024-10-08 18:09:53,308: INFO/MainProcess] Task upload_csv.tasks.process_asset_in_background[4ecf478f-e0db-4d89-a0cd-341f938bdd70] received
+[2024-10-08 18:09:54,341: INFO/MainProcess] Task upload_csv.tasks.process_trade_ids_in_background[377a1d7b-a309-474c-ad73-d9afc9c00236] received
+[2024-10-08 18:09:54,906: ERROR/ForkPoolWorker-15] Task upload_csv.tasks.process_trade_ids_in_background[18a66284-0b6a-418f-bf5f-c0d1955d05f7] raised unexpected: NameError("name 'connection' is not defined")
+Traceback (most recent call last):
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 453, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 736, in __protected_call__
+    return self.run(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/doji-lite-api-v2/upload_csv/tasks.py", line 21, in process_trade_ids_in_background
+    logger.debug(f"Completed processing trade IDs: {asset_ids}")
+    ^^^^^^^^^^
+NameError: name 'connection' is not defined
+[2024-10-08 18:09:55,225: INFO/MainProcess] Task upload_csv.tasks.process_trade_ids_in_background[89e245a9-25e7-4811-96e7-8c8ca52521d6] received
+[2024-10-08 18:09:56,076: INFO/MainProcess] Task upload_csv.tasks.process_trade_ids_in_background[dd198fe0-e9d8-431d-a7a9-3fc295210741] received
+[2024-10-08 18:09:56,709: INFO/MainProcess] Task upload_csv.tasks.process_asset_in_background[f069625b-8a57-49b7-a6d5-c14b8bd1e2bb] received
+[2024-10-08 18:09:56,744: ERROR/ForkPoolWorker-15] Task upload_csv.tasks.process_trade_ids_in_background[ea83b477-756c-4860-86ab-1233514a0097] raised unexpected: NameError("name 'connection' is not defined")
+Traceback (most recent call last):
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 453, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 736, in __protected_call__
+    return self.run(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/doji-lite-api-v2/upload_csv/tasks.py", line 21, in process_trade_ids_in_background
+    logger.debug(f"Completed processing trade IDs: {asset_ids}")
+    ^^^^^^^^^^
+NameError: name 'connection' is not defined
+[2024-10-08 18:09:57,332: WARNING/ForkPoolWorker-15] No trades found for asset BTCUSDT. Skipping revert.
+[2024-10-08 18:09:57,333: INFO/ForkPoolWorker-15] Task upload_csv.tasks.process_asset_in_background[b6dc3b12-6288-4a4e-8bde-59b9bf359748] succeeded in 0.003930079998099245s: None
+[2024-10-08 18:09:57,389: INFO/MainProcess] Task upload_csv.tasks.process_asset_in_background[e6200718-9809-4550-9932-ce02dbbc7083] received
+[2024-10-08 18:09:58,283: WARNING/ForkPoolWorker-15] No trades found for asset LDOUSDT. Skipping revert.
+[2024-10-08 18:09:58,285: INFO/ForkPoolWorker-15] Task upload_csv.tasks.process_asset_in_background[4ecf478f-e0db-4d89-a0cd-341f938bdd70] succeeded in 0.004755869995278772s: None
+[2024-10-08 18:09:59,319: ERROR/ForkPoolWorker-15] Task upload_csv.tasks.process_trade_ids_in_background[377a1d7b-a309-474c-ad73-d9afc9c00236] raised unexpected: NameError("name 'connection' is not defined")
+Traceback (most recent call last):
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 453, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 736, in __protected_call__
+    return self.run(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/doji-lite-api-v2/upload_csv/tasks.py", line 21, in process_trade_ids_in_background
+    logger.debug(f"Completed processing trade IDs: {asset_ids}")
+    ^^^^^^^^^^
+NameError: name 'connection' is not defined
+[2024-10-08 18:09:59,511: INFO/MainProcess] Task upload_csv.tasks.process_trade_ids_in_background[02c97ca1-8c5e-4ede-933e-28cf53b976b4] received
+[2024-10-08 18:10:00,204: ERROR/ForkPoolWorker-15] Task upload_csv.tasks.process_trade_ids_in_background[89e245a9-25e7-4811-96e7-8c8ca52521d6] raised unexpected: NameError("name 'connection' is not defined")
+Traceback (most recent call last):
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 453, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 736, in __protected_call__
+    return self.run(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/doji-lite-api-v2/upload_csv/tasks.py", line 21, in process_trade_ids_in_background
+    logger.debug(f"Completed processing trade IDs: {asset_ids}")
+    ^^^^^^^^^^
+NameError: name 'connection' is not defined
+[2024-10-08 18:10:00,390: INFO/MainProcess] Task upload_csv.tasks.process_trade_ids_in_background[5c46a2ca-a228-4995-95a8-215925fffcf6] received
+[2024-10-08 18:10:01,055: ERROR/ForkPoolWorker-15] Task upload_csv.tasks.process_trade_ids_in_background[dd198fe0-e9d8-431d-a7a9-3fc295210741] raised unexpected: NameError("name 'connection' is not defined")
+Traceback (most recent call last):
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 453, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 736, in __protected_call__
+    return self.run(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/doji-lite-api-v2/upload_csv/tasks.py", line 21, in process_trade_ids_in_background
+    logger.debug(f"Completed processing trade IDs: {asset_ids}")
+    ^^^^^^^^^^
+NameError: name 'connection' is not defined
+[2024-10-08 18:10:01,304: INFO/MainProcess] Task upload_csv.tasks.process_asset_in_background[5b28b58f-f881-4e25-b272-33f9fa7fc10f] received
+[2024-10-08 18:10:01,684: WARNING/ForkPoolWorker-15] No trades found for asset LDOUSDT. Skipping revert.
+[2024-10-08 18:10:01,685: INFO/ForkPoolWorker-15] Task upload_csv.tasks.process_asset_in_background[f069625b-8a57-49b7-a6d5-c14b8bd1e2bb] succeeded in 0.003982740003266372s: None
+[2024-10-08 18:10:02,330: WARNING/ForkPoolWorker-15] No trades found for asset LDOUSDT. Skipping revert.
+[2024-10-08 18:10:02,332: INFO/ForkPoolWorker-15] Task upload_csv.tasks.process_asset_in_background[e6200718-9809-4550-9932-ce02dbbc7083] succeeded in 0.0035593200009316206s: None
+[2024-10-08 18:10:02,906: INFO/MainProcess] Task upload_csv.tasks.process_asset_in_background[0ec7ba7e-4f33-4ece-9e4d-0842d886f5f9] received
+[2024-10-08 18:10:04,490: ERROR/ForkPoolWorker-15] Task upload_csv.tasks.process_trade_ids_in_background[02c97ca1-8c5e-4ede-933e-28cf53b976b4] raised unexpected: NameError("name 'connection' is not defined")
+Traceback (most recent call last):
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 453, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 736, in __protected_call__
+    return self.run(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/doji-lite-api-v2/upload_csv/tasks.py", line 21, in process_trade_ids_in_background
+    logger.debug(f"Completed processing trade IDs: {asset_ids}")
+    ^^^^^^^^^^
+NameError: name 'connection' is not defined
+[2024-10-08 18:10:04,963: INFO/MainProcess] Task upload_csv.tasks.process_asset_in_background[12a80077-971d-4cc7-b7e6-5fbe53254c0e] received
+[2024-10-08 18:10:05,369: ERROR/ForkPoolWorker-15] Task upload_csv.tasks.process_trade_ids_in_background[5c46a2ca-a228-4995-95a8-215925fffcf6] raised unexpected: NameError("name 'connection' is not defined")
+Traceback (most recent call last):
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 453, in trace_task
+    R = retval = fun(*args, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.pip-modules/lib/python3.12/site-packages/celery/app/trace.py", line 736, in __protected_call__
+    return self.run(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/doji-lite-api-v2/upload_csv/tasks.py", line 21, in process_trade_ids_in_background
+    logger.debug(f"Completed processing trade IDs: {asset_ids}")
+    ^^^^^^^^^^
+NameError: name 'connection' is not defined
+[2024-10-08 18:10:05,932: INFO/MainProcess] Task upload_csv.tasks.process_asset_in_background[4987533d-04ca-4119-9cc6-569f8ec4bd4e] received
+[2024-10-08 18:10:06,268: WARNING/ForkPoolWorker-15] No trades found for asset BLURUSDT. Skipping revert.
+[2024-10-08 18:10:06,269: INFO/ForkPoolWorker-15] Task upload_csv.tasks.process_asset_in_background[5b28b58f-f881-4e25-b272-33f9fa7fc10f] succeeded in 0.0038310700037982315s: None
+[2024-10-08 18:10:06,752: INFO/MainProcess] Task upload_csv.tasks.process_asset_in_background[19ad4e2e-cbfe-4afd-b669-a1b9e492375f] received
+[2024-10-08 18:10:07,879: WARNING/ForkPoolWorker-15] No trades found for asset LDOUSDT. Skipping revert.
+[2024-10-08 18:10:07,881: INFO/ForkPoolWorker-15] Task upload_csv.tasks.process_asset_in_background[0ec7ba7e-4f33-4ece-9e4d-0842d886f5f9] succeeded in 0.0038971900066826493s: None
+[2024-10-08 18:10:09,937: WARNING/ForkPoolWorker-15] No trades found for asset RUNEUSDT. Skipping revert.
+[2024-10-08 18:10:09,939: INFO/ForkPoolWorker-15] Task upload_csv.tasks.process_asset_in_background[12a80077-971d-4cc7-b7e6-5fbe53254c0e] succeeded in 0.0038550489989575s: None
+[2024-10-08 18:10:10,897: WARNING/ForkPoolWorker-15] No trades found for asset BLURUSDT. Skipping revert.
+[2024-10-08 18:10:10,898: INFO/ForkPoolWorker-15] Task upload_csv.tasks.process_asset_in_background[4987533d-04ca-4119-9cc6-569f8ec4bd4e] succeeded in 0.0035322199983056635s: None
+[2024-10-08 18:10:11,717: WARNING/ForkPoolWorker-15] No trades found for asset BLURUSDT. Skipping revert.
+[2024-10-08 18:10:11,718: INFO/ForkPoolWorker-15] Task upload_csv.tasks.process_asset_in_background[19ad4e2e-cbfe-4afd-b669-a1b9e492375f] succeeded in 0.003646589997515548s: None

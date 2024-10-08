@@ -1,4 +1,5 @@
 import json
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db import transaction
 from .models import TradeUploadBlofin, TradeProcessingStatus, FileName
@@ -42,8 +43,9 @@ class TradeMatcherProcessor:
         return remaining_trades
     
     def update_processing_status(self, asset_name):
+        owner_instance = User.objects.get(id=self.owner)  # Fetch the User instance by ID
         TradeProcessingStatus.objects.update_or_create(
-            owner=self.owner,
+            owner=owner_instance,
             asset_name=asset_name,
             defaults={'last_processed': timezone.now()}
         )
