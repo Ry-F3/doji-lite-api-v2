@@ -6468,3 +6468,4 @@ NameError: name 'connection' is not defined
 [2024-10-08 17:31:25,356: INFO/MainProcess] sync with celery@ab24c857-6b1d-4fc7-92f7-d19eb9d15563
 [2024-10-08 17:31:29,034: WARNING/ForkPoolWorker-15] No trades found for asset ARBUSDT. Skipping revert.
 [2024-10-08 17:31:29,036: INFO/ForkPoolWorker-15] Task upload_csv.tasks.process_asset_in_background[4efbfa23-7291-478d-bc55-9562993dde6d] succeeded in 0.0038446510006906465s: None
+[2024-10-08 17:56:27,627: INFO/MainProcess] sync with celery@9bbc0516-3fbc-43c0-b306-f4a2126605d5

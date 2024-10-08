@@ -9,7 +9,7 @@ from .serializers import FileUploadSerializer, SaveTradeSerializer, FileNameSeri
 from django_filters.rest_framework import DjangoFilterBackend
 from upload_csv.exchange.blofin.blofin_csv_handler import BloFinHandler
 from upload_csv.exchange.blofin.csv_processor import CsvProcessor
-from .models import TradeUploadBlofin, FileName
+from .models import TradeUploadBlofin, FileName, TradeProcessingStatus
 from .tasks import  process_trade_ids_in_background, process_asset_in_background, process_csv_file_async
 from .trade_matcher import TradeIdMatcher
 from django.db.models import Count

@@ -55,6 +55,7 @@ class TradeProcessingStatus(models.Model):
 
     class Meta:
         unique_together = ('owner', 'asset_name')
+        ordering = ['-last_processed']  # Default ordering
 
     def __str__(self):
         return f"{self.owner.username} - {self.asset_name} - Last Processed: {self.last_processed}"
@@ -69,7 +70,7 @@ class FileName(models.Model):
 
     def __str__(self):
         return self.file_name
-        
+
 
 class LiveTrades(models.Model):
     owner = models.ForeignKey(
