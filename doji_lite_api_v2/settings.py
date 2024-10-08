@@ -21,6 +21,7 @@ if os.path.exists('env.py'):
 # Celery settings
 # CELERY_BROKER_URL = f'redis://:{os.environ["REDIS_PASSWORD"]}@127.0.0.1:6379/1'
 CELERY_BROKER_URL = os.environ.get("REDIS_URL")
+CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL")
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
