@@ -43,13 +43,11 @@ def process_asset_in_background(self, owner_id, asset_name):
         raise self.retry(exc=e, countdown=5)  # Retry with delay
 
 
-from celery import group, chord
-
 @shared_task(bind=True, soft_time_limit=90, time_limit=120)
 def process_csv_file_async(self, owner_id, file_name_entry_id, csv_content, exchange):
     try:
         owner = User.objects.get(id=owner_id)
-        file_name_entry = FileName.objects.get(id=file_name_entry_id)
+        file_name_entry, created = FileName.objects.get_or_create(id=file_name_entry_id)
 
         logger.debug(f"Starting to process CSV for user: {owner.username}")
 
