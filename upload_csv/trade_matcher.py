@@ -19,26 +19,19 @@ class TradeMatcherProcessor:
         self.revert_filled_quantity_values(asset_name)
         self.process_asset_match(asset_name)
 
-        # Return 0 if all trades for this asset have been processed
-        remaining_trades = TradeUploadBlofin.objects.filter(owner=self.owner, underlying_asset=asset_name).count()
-        return remaining_trades
-
     def revert_filled_quantity_values(self, asset_name):
         """Revert all trades' filled_quantity values to their original_filled_quantity before processing."""
         with transaction.atomic():
-            # Retrieve the queryset first
-            trades_queryset = TradeUploadBlofin.objects.filter(
+            trades = TradeUploadBlofin.objects.filter(
                 owner=self.owner,
                 underlying_asset=asset_name
             )
 
-            # Check if any trades exist
-            if not trades_queryset.exists():
+            if not trades.exists():
                 logger.warning(f"No trades found for asset {asset_name}. Skipping revert.")
                 return
 
-            # Use iterator for memory efficiency
-            for trade in trades_queryset.iterator(chunk_size=100):
+            for trade in trades:
                 original_value = trade.original_filled_quantity
                 if original_value is None:
                     logger.warning(f"Trade ID={trade.id} does not have an original_filled_quantity. Skipping revert.")
@@ -59,35 +52,19 @@ class TradeMatcherProcessor:
     def process_asset_match(self, asset_name):
         logger.debug(f"Processing asset match for: {asset_name}")
 
-        # Initialize buy and sell status lists
-        buy_status = []
-        sell_status = []
+        trades = TradeUploadBlofin.objects.filter(
+            owner=self.owner,
+            underlying_asset=asset_name,
+        )
 
-        # Process buys in chunks
-        for buy in TradeUploadBlofin.objects.filter(
-            owner=self.owner, underlying_asset=asset_name, side='Buy'
-        ).iterator(chunk_size=100):  # Chunking by 100
-            buy_status.append({
-                'id': buy.id,
-                'value': buy.filled_quantity,
-                'is_matched': False,
-                'is_partially_matched': False,
-                'is_open': True
-            })
+        buys = list(trades.filter(side='Buy').values_list('id', 'filled_quantity'))
+        sells = list(trades.filter(side='Sell').values_list('id', 'filled_quantity'))
 
-        # Process sells in chunks
-        for sell in TradeUploadBlofin.objects.filter(
-            owner=self.owner, underlying_asset=asset_name, side='Sell'
-        ).iterator(chunk_size=100):  # Chunking by 100
-            sell_status.append({
-                'id': sell.id,
-                'value': sell.filled_quantity,
-                'is_matched': False,
-                'is_partially_matched': False,
-                'is_open': True
-            })
+        logger.debug(f"Buys: {buys}, Sells: {sells}")
 
-        logger.debug(f"Buys: {buy_status}, Sells: {sell_status}")
+        buy_status = [{'id': buy[0], 'value': buy[1], 'is_matched': False, 'is_partially_matched': False, 'is_open': True} for buy in buys]
+        sell_status = [{'id': sell[0], 'value': sell[1], 'is_matched': False, 'is_partially_matched': False, 'is_open': True} for sell in sells]
+
         i = 0  # Pointer for `buys`
         while i < len(buy_status) and sell_status:
             logger.debug(f"Processing Buy ID: {buy_status[i]['id']} with value: {buy_status[i]['value']}")

@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from .trade_matcher import TradeIdMatcher, TradeMatcherProcessor
 from .models import FileName, TradeUploadBlofin
 from django.db import transaction
-from celery.exceptions import SoftTimeLimitExceeded
 import time
 import logging
 
@@ -43,8 +42,8 @@ def process_asset_in_background(self, owner_id, asset_name):
         logger.error(f"Error processing asset {asset_name}: {e}")
         raise self.retry(exc=e, countdown=5)  # Retry with delay
 
-@shared_task(bind=True, soft_time_limit=90, time_limit=120)
-def process_csv_file_async(self, owner_id, file_name_entry_id, csv_content, exchange):
+@shared_task
+def process_csv_file_async(owner_id, file_name_entry_id, csv_content, exchange):
     try:
         owner = User.objects.get(id=owner_id)
         file_name_entry = FileName.objects.get(id=file_name_entry_id)
@@ -54,20 +53,20 @@ def process_csv_file_async(self, owner_id, file_name_entry_id, csv_content, exch
         # Fetch asset names in chunks to reduce memory usage
         asset_names = TradeUploadBlofin.objects.filter(owner=owner).values_list('underlying_asset', flat=True)
 
+        # Loop through each asset and trigger background tasks in chunks
         for asset_name in asset_names:
-            time.sleep(1)  # Be cautious with sleep; it can waste time and resources.
+            time.sleep(1)
             # Process trade IDs for each asset with chunking
             process_trade_ids_in_background.delay(owner.id)
+
             # Process trades for each asset with chunking
             process_asset_in_background.delay(owner.id, asset_name)
+
             logger.debug(f"Triggered background task for asset processing: {asset_name}")
 
         # Save the file_name_entry after processing
         file_name_entry.save()
 
-    except SoftTimeLimitExceeded:
-        logger.warning(f"Soft time limit exceeded for task: {self.request.id}. Performing cleanup.")
-        # Add any cleanup code here, if needed
     except User.DoesNotExist:
         logger.error(f"User with ID {owner_id} does not exist.")
     except FileName.DoesNotExist:
