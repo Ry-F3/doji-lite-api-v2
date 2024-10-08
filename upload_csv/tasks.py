@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from .trade_matcher import TradeIdMatcher, TradeMatcherProcessor
 from .models import FileName, TradeUploadBlofin
 from django.db import transaction
+import time
 import logging
 
 logger = logging.getLogger(__name__)
@@ -54,6 +55,7 @@ def process_csv_file_async(owner_id, file_name_entry_id, csv_content, exchange):
 
         # Loop through each asset and trigger background tasks in chunks
         for asset_name in asset_names:
+            time.sleep(1)
             # Process trade IDs for each asset with chunking
             process_trade_ids_in_background.delay(owner.id)
 
