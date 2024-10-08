@@ -14,7 +14,7 @@ class TradeMatcherProcessor:
         self.owner = owner
         self.trades_by_asset = {}
 
-    def process_assets(self, asset_name):
+    def process_assets(self, asset_name, chunk_size=None):
         logger.debug(f"Starting asset processing for: {asset_name}")
         self.revert_filled_quantity_values(asset_name)
         self.process_asset_match(asset_name)
@@ -133,6 +133,6 @@ class TradeIdMatcher:
 
         # Process each asset name that was found
         for asset_name in asset_ids.keys():
-            processor.process_assets(asset_name)
+            processor.process_assets(asset_name, chunk_size=100)
 
         return asset_ids
