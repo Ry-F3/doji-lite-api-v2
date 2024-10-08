@@ -19,6 +19,10 @@ class TradeMatcherProcessor:
         self.revert_filled_quantity_values(asset_name)
         self.process_asset_match(asset_name)
 
+        # Return 0 if all trades for this asset have been processed
+        remaining_trades = TradeUploadBlofin.objects.filter(owner=self.owner, underlying_asset=asset_name).count()
+        return remaining_trades
+
     def revert_filled_quantity_values(self, asset_name):
         """Revert all trades' filled_quantity values to their original_filled_quantity before processing."""
         with transaction.atomic():

@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from .trade_matcher import TradeIdMatcher, TradeMatcherProcessor
 from .models import FileName, TradeUploadBlofin
 from django.db import transaction
+from celery.exceptions import SoftTimeLimitExceeded
 import time
 import logging
 
@@ -42,7 +43,7 @@ def process_asset_in_background(self, owner_id, asset_name):
         logger.error(f"Error processing asset {asset_name}: {e}")
         raise self.retry(exc=e, countdown=5)  # Retry with delay
 
-@shared_task
+@shared_task(soft_time_limit=90)
 def process_csv_file_async(owner_id, file_name_entry_id, csv_content, exchange):
     try:
         owner = User.objects.get(id=owner_id)
