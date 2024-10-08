@@ -5,11 +5,11 @@ from rest_framework.response import Response
 from django.utils import timezone
 import pandas as pd
 import time
-from .serializers import FileUploadSerializer, SaveTradeSerializer, FileNameSerializer, TradeProcessingStatusSerializer
+from .serializers import FileUploadSerializer, SaveTradeSerializer, FileNameSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from upload_csv.exchange.blofin.blofin_csv_handler import BloFinHandler
 from upload_csv.exchange.blofin.csv_processor import CsvProcessor
-from .models import TradeUploadBlofin, FileName, TradeProcessingStatus
+from .models import TradeUploadBlofin, FileName
 from .tasks import  process_trade_ids_in_background, process_asset_in_background, process_csv_file_async
 from .trade_matcher import TradeIdMatcher
 from django.db.models import Count
@@ -28,30 +28,6 @@ class CsvTradeView(generics.ListAPIView):
     ordering_fields = ['owner', 'order_time',
                        'underlying_asset', 'side', 'is_open', 'is_matched']
     ordering = ['-order_time']
-
-
-class TradeProcessingStatusList(generics.ListCreateAPIView):
-    """
-    API view to retrieve list of trade processing statuses or create a new one.
-    """
-    serializer_class = TradeProcessingStatusSerializer
-    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
-
-    def get_queryset(self):
-        # Filter the queryset by the current user's status
-        return TradeProcessingStatus.objects.filter(owner=self.request.user)
-
-
-class TradeProcessingStatusDetail(generics.RetrieveUpdateDestroyAPIView):
-    """
-    API view to retrieve, update or delete a trade processing status.
-    """
-    serializer_class = TradeProcessingStatusSerializer
-    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
-
-    def get_queryset(self):
-        # Filter the queryset by the current user's status
-        return TradeProcessingStatus.objects.filter(owner=self.request.user)
 
 
 class FileNameListView(generics.ListAPIView):

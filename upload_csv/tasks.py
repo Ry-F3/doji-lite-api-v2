@@ -54,26 +54,15 @@ def process_csv_file_async(self, owner_id, file_name_entry_id, csv_content, exch
         # Fetch asset names in chunks to reduce memory usage
         asset_names = TradeUploadBlofin.objects.filter(owner=owner).values_list('underlying_asset', flat=True)
 
-        # Check if there are asset names to process
-        if not asset_names:
-            logger.warning(f"No assets found for owner: {owner_id}. Skipping processing.")
-            return  # Exit early if no assets
-
-        # Process each asset name
         for asset_name in asset_names:
-            # Only process if asset_name is not None or empty
-            if asset_name:
-                logger.debug(f"Processing asset: {asset_name} for owner: {owner_id}")
-                # Process trade IDs for each asset with chunking
-                process_trade_ids_in_background.delay(owner.id)
-                # Process trades for each asset with chunking
-                process_asset_in_background.delay(owner.id, asset_name)
-                logger.debug(f"Triggered background task for asset processing: {asset_name}")
-            else:
-                logger.warning(f"Encountered empty asset name for owner: {owner_id}. Skipping.")
+            time.sleep(1)  # Be cautious with sleep; it can waste time and resources.
+            # Process trade IDs for each asset with chunking
+            process_trade_ids_in_background.delay(owner.id)
+            # Process trades for each asset with chunking
+            process_asset_in_background.delay(owner.id, asset_name)
+            logger.debug(f"Triggered background task for asset processing: {asset_name}")
 
         # Save the file_name_entry after processing
-        file_name_entry.processing = True  # Example flag to indicate processing state
         file_name_entry.save()
 
     except SoftTimeLimitExceeded:

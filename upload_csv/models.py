@@ -47,20 +47,6 @@ class TradeUploadBlofin(models.Model):
     def __str__(self):
         return f"{self.underlying_asset} - {self.side}"
 
-
-class TradeProcessingStatus(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    asset_name = models.CharField(max_length=255)
-    last_processed = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        unique_together = ('owner', 'asset_name')
-        ordering = ['-last_processed']  # Default ordering
-
-    def __str__(self):
-        return f"{self.owner.username} - {self.asset_name} - Last Processed: {self.last_processed}"
-
-
 class FileName(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='file_names')
     file_name = models.CharField(max_length=250, unique=True)
@@ -70,7 +56,6 @@ class FileName(models.Model):
 
     def __str__(self):
         return self.file_name
-
 
 class LiveTrades(models.Model):
     owner = models.ForeignKey(

@@ -1,15 +1,11 @@
 from rest_framework import serializers
-from .models import TradeUploadBlofin, FileName, LiveTrades, TradeProcessingStatus
+from .models import TradeUploadBlofin, FileName, LiveTrades
 from collections import defaultdict
 from decimal import Decimal
 from django.contrib.auth.models import User
 from upload_csv.utils.convert_fields_to_readable import FormattingUtils
 
 
-class TradeProcessingStatusSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TradeProcessingStatus
-        fields = ['id', 'owner', 'asset_name', 'last_processed']
 
 class FileNameSerializer(serializers.ModelSerializer):
     class Meta:

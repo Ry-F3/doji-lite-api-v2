@@ -1,8 +1,7 @@
 import json
-from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db import transaction
-from .models import TradeUploadBlofin, TradeProcessingStatus, FileName
+from .models import TradeUploadBlofin
 from decimal import Decimal
 import logging
 
@@ -12,45 +11,17 @@ logger = logging.getLogger(__name__)
 
 class TradeMatcherProcessor:
     def __init__(self, owner):
-        if isinstance(owner, int):  # If owner is an ID, fetch the User instance
-            self.owner = User.objects.get(id=owner)
-        else:
-            self.owner = owner  # Assume it's already a User instance
+        self.owner = owner
         self.trades_by_asset = {}
-
-    def should_process_asset(self, asset_name):
-        # Check if there is a new file in the user's FileName model
-        new_files_exist = FileName.objects.filter(owner=self.owner, processing=False).exists()
-        logger.debug(f"New files exist: {new_files_exist} for owner: {self.owner}")
-
-        return new_files_exist  # Only process if new files exist
-
 
     def process_assets(self, asset_name, chunk_size=None):
         logger.debug(f"Starting asset processing for: {asset_name}")
-        
-        # Check if we should process the asset
-        if not self.should_process_asset(asset_name):
-            logger.debug(f"No need to process asset: {asset_name}")
-            return  # Exit if we don't need to process
-
         self.revert_filled_quantity_values(asset_name)
         self.process_asset_match(asset_name)
-
-        # Update the processing status after processing
-        self.update_processing_status(asset_name)
 
         # Return 0 if all trades for this asset have been processed
         remaining_trades = TradeUploadBlofin.objects.filter(owner=self.owner, underlying_asset=asset_name).count()
         return remaining_trades
-    
-    def update_processing_status(self, asset_name):
-        owner_instance = User.objects.get(id=self.owner)  # Fetch the User instance by ID
-        TradeProcessingStatus.objects.update_or_create(
-            owner=owner_instance,
-            asset_name=asset_name,
-            defaults={'last_processed': timezone.now()}
-        )
 
     def revert_filled_quantity_values(self, asset_name):
         """Revert all trades' filled_quantity values to their original_filled_quantity before processing."""
