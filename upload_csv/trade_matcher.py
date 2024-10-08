@@ -12,17 +12,19 @@ logger = logging.getLogger(__name__)
 
 class TradeMatcherProcessor:
     def __init__(self, owner):
-        self.owner = owner
+        if isinstance(owner, int):  # If owner is an ID, fetch the User instance
+            self.owner = User.objects.get(id=owner)
+        else:
+            self.owner = owner  # Assume it's already a User instance
         self.trades_by_asset = {}
 
     def should_process_asset(self, asset_name):
         # Check if there is a new file in the user's FileName model
         new_files_exist = FileName.objects.filter(owner=self.owner, processing=False).exists()
-        
-        if new_files_exist:
-            return True  # Process the asset if there's a new file
-        
-        return True  # Always process if there are no new files, or you can adjust the logic here
+        logger.debug(f"New files exist: {new_files_exist} for owner: {self.owner}")
+
+        return new_files_exist  # Only process if new files exist
+
 
     def process_assets(self, asset_name, chunk_size=None):
         logger.debug(f"Starting asset processing for: {asset_name}")
