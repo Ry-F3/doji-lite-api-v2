@@ -2,6 +2,7 @@ from celery import shared_task
 from django.contrib.auth.models import User
 from .trade_matcher import TradeIdMatcher, TradeMatcherProcessor
 from .models import FileName, TradeUploadBlofin
+from django.db import connection
 from django.db import transaction
 import logging
 
