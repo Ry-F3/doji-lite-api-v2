@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import generics, filters
+from rest_framework import generics, filters, status
 from rest_framework.response import Response
-from rest_framework import status
 from django.utils import timezone
 import pandas as pd
 import time
@@ -58,11 +57,7 @@ class DeleteTradesByFileNameView(generics.DestroyAPIView):
         if not force_delete and file_name_entry.cancel_processing:
             return Response({"detail": "File is currently processing and cannot be deleted."}, status=status.HTTP_403_FORBIDDEN)
 
-        # Set the cancellation flag before proceeding
-        file_name_entry.cancel_processing = True
-        file_name_entry.save()
-
-        # Proceed with deletion logic
+        # Allow deletion
         trade_count, _ = TradeUploadBlofin.objects.filter(file_name=file_name_entry.file_name).delete()
         file_name_entry.delete()
 
@@ -71,22 +66,19 @@ class DeleteTradesByFileNameView(generics.DestroyAPIView):
         }, status=status.HTTP_204_NO_CONTENT)
 
 
-
 class DeleteAllTradesView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, *args, **kwargs):
         owner = request.user
-
-        # Check if the force delete flag is set
         force_delete = request.query_params.get('force', 'false') == 'true'
 
-        # You might want to include some logic here to check if trades are processing.
+        # Check if the force delete flag is set
         if not force_delete:
             # Implement your check logic here if needed
             # For example, checking if any trades are currently being processed
-            # If processing is detected, return a response
-            return Response({"detail": "Cannot delete trades while they are being processed."}, status=status.HTTP_403_FORBIDDEN)
+            if TradeUploadBlofin.objects.filter(owner=owner, is_processing=True).exists():
+                return Response({"detail": "Cannot delete trades while they are being processed."}, status=status.HTTP_403_FORBIDDEN)
 
         # Delete all trades for the authenticated user
         trade_count, _ = TradeUploadBlofin.objects.filter(owner=owner).delete()

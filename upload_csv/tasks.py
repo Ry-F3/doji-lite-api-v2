@@ -15,6 +15,12 @@ def process_trade_ids_in_background(self, owner_id):
 
         # Fetch unprocessed trades only
         with transaction.atomic():
+            # Check for cancellation before processing
+            file_name_entry = FileName.objects.get(owner_id=owner_id)  # Assuming you can fetch it this way
+            if file_name_entry.cancel_processing:
+                logger.info("Cancellation requested. Exiting process_trade_ids_in_background.")
+                return
+
             asset_ids = processor.check_trade_ids()
             logger.debug(f"Completed processing trade IDs: {asset_ids}")
     finally:
@@ -28,6 +34,11 @@ def process_asset_in_background(self, owner_id, asset_name):
 
         # Process unprocessed trades for the asset
         with transaction.atomic():
+            file_name_entry = FileName.objects.get(owner_id=owner_id)  # Fetch it again to check for cancellation
+            if file_name_entry.cancel_processing:
+                logger.info("Cancellation requested. Exiting process_asset_in_background.")
+                return
+
             remaining_trades = processor.process_assets(asset_name)
             if remaining_trades == 0:
                 logger.debug(f"All trades processed for asset: {asset_name}")
