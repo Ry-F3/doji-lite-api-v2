@@ -55,14 +55,11 @@ def process_asset_in_background(self, owner_id, asset_name):
 def process_csv_file_async(owner_id, file_name_entry_id, csv_content, exchange):
     try:
         owner = User.objects.get(id=owner_id)
-        file_name_entry = FileName.objects.filter(owner_id=owner_id).first()  # Get the first matching entry
+        file_name_entry = FileName.objects.filter(owner_id=owner_id) # Get the first matching entry
         if not file_name_entry:
             logger.error(f"No FileName entry found for owner_id: {owner_id}")
             return 
         logger.debug(f"Starting to process CSV for user: {owner.username}")
-
-        # If processing only the first entry:
-        file_name_entry = file_name_entries.first()
 
         with transaction.atomic():
             # Set processing flag to True
