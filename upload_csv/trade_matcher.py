@@ -25,7 +25,7 @@ class TradeMatcherProcessor:
             trades = TradeUploadBlofin.objects.filter(
                 owner=self.owner,
                 underlying_asset=asset_name
-            )
+            ).iterator(chunk_size=100)
 
             if not trades.exists():
                 logger.warning(f"No trades found for asset {asset_name}. Skipping revert.")
@@ -52,19 +52,35 @@ class TradeMatcherProcessor:
     def process_asset_match(self, asset_name):
         logger.debug(f"Processing asset match for: {asset_name}")
 
-        trades = TradeUploadBlofin.objects.filter(
-            owner=self.owner,
-            underlying_asset=asset_name,
-        )
+        # Initialize buy and sell status lists
+        buy_status = []
+        sell_status = []
 
-        buys = list(trades.filter(side='Buy').values_list('id', 'filled_quantity'))
-        sells = list(trades.filter(side='Sell').values_list('id', 'filled_quantity'))
+        # Process buys in chunks
+        for buy in TradeUploadBlofin.objects.filter(
+            owner=self.owner, underlying_asset=asset_name, side='Buy'
+        ).iterator(chunk_size=100):  # Chunking by 100
+            buy_status.append({
+                'id': buy.id,
+                'value': buy.filled_quantity,
+                'is_matched': False,
+                'is_partially_matched': False,
+                'is_open': True
+            })
 
-        logger.debug(f"Buys: {buys}, Sells: {sells}")
+        # Process sells in chunks
+        for sell in TradeUploadBlofin.objects.filter(
+            owner=self.owner, underlying_asset=asset_name, side='Sell'
+        ).iterator(chunk_size=100):  # Chunking by 100
+            sell_status.append({
+                'id': sell.id,
+                'value': sell.filled_quantity,
+                'is_matched': False,
+                'is_partially_matched': False,
+                'is_open': True
+            })
 
-        buy_status = [{'id': buy[0], 'value': buy[1], 'is_matched': False, 'is_partially_matched': False, 'is_open': True} for buy in buys]
-        sell_status = [{'id': sell[0], 'value': sell[1], 'is_matched': False, 'is_partially_matched': False, 'is_open': True} for sell in sells]
-
+        logger.debug(f"Buys: {buy_status}, Sells: {sell_status}")
         i = 0  # Pointer for `buys`
         while i < len(buy_status) and sell_status:
             logger.debug(f"Processing Buy ID: {buy_status[i]['id']} with value: {buy_status[i]['value']}")
