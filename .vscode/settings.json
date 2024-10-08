@@ -1,18 +1,123 @@
 {
   "files.exclude": {
-      "**/.DS_Store": true,
-      "**/.git": true,
-      "**/.github": true,
-      "**/.gitp*": true,
-      "**/.hg": true,
-      "**/.svn": true,
-      "**/.vscode": true,
-      "**/core.Microsoft*": true,
-      "**/core.mongo*": true,
-      "**/core.python*": true,
-      "**/CVS": true
-   },
-   "files.autoSave": "off",
-   "workbench.colorTheme": "Visual Studio Dark",
-   "terminal.integrated.gpuAcceleration": "canvas",
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/.github": true,
+    "**/.gitp*": true,
+    "**/.hg": true,
+    "**/.svn": true,
+    "**/.vscode": true,
+    "**/core.Microsoft*": true,
+    "**/core.mongo*": true,
+    "**/core.python*": true,
+    "**/CVS": true
+  },
+  "files.autoSave": "off",
+  "workbench.colorTheme": "Visual Studio Dark",
+  "terminal.integrated.gpuAcceleration": "canvas",
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": [
+          "comment",
+          "comment.block",
+          "comment.line.double-slash"
+        ],
+        "settings": {
+          "foreground": "#b0b4b0a4", // Darker green for comments
+          "fontStyle": "italic"
+        }
+      },
+      {
+        "scope": [
+          "keyword",
+          "keyword.control"
+        ],
+        "settings": {
+          "foreground": "#35c4fd" // Yellow for keywords
+        }
+      },
+      {
+        "scope": [
+          "variable",
+          "variable.parameter",
+          "variable.other"
+        ],
+        "settings": {
+          "foreground": "#d1cecece" // White for arguments
+        }
+      },
+      {
+        "scope": [
+          "entity.name.function",
+          "meta.function.python"
+        ],
+        "settings": {
+          "foreground": "#f5f5f5ec" // Red for function names
+        }
+      },
+      {
+        "scope": [
+          "meta.decorator",
+          "meta.decorator.python"
+        ],
+        "settings": {
+          "foreground": "#FFFFFF" // White for decorators like @shared_task
+        }
+      },
+      {
+        "scope": [
+          "constant.language.boolean"
+        ],
+        "settings": {
+          "foreground": "#2196F3" // Blue for Booleans
+        }
+      },
+      {
+        "scope": [
+          "constant.numeric"
+        ],
+        "settings": {
+          "foreground": "#d16161" // Red for numbers
+        }
+      },
+      {
+        "scope": [
+          "support.function",
+          "support.type"
+        ],
+        "settings": {
+          "foreground": "#A6E22E" // Green for support functions and types
+        }
+      },
+      {
+        "scope": [
+          "string",
+          "string.quoted",
+          "string.quoted.double"
+        ],
+        "settings": {
+          "foreground": "#dfa842cb" // Green for normal strings
+        }
+      },
+      {
+        "scope": [
+          "string.interpolated",
+          "string.template"
+        ],
+        "settings": {
+          "foreground": "#eeab47" // Pale orange for f-strings
+        }
+      },
+      {
+        "scope": [
+          "meta.method-call",
+          "meta.function-call"
+        ],
+        "settings": {
+          "foreground": "#ffffff" // Orange for method calls
+        }
+      }
+    ]
+  }
 }
