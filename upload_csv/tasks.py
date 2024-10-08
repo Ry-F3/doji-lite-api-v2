@@ -54,32 +54,39 @@ def process_asset_in_background(self, owner_id, asset_name):
 def process_csv_file_async(owner_id, file_name_entry_id, csv_content, exchange):
     try:
         owner = User.objects.get(id=owner_id)
-        file_name_entry = FileName.objects.get(id=file_name_entry_id)
+        file_name_entry = FileName.objects.filter(owner_id=owner_id).first()  # Get the first matching entry
+        if not file_name_entry:
+            logger.error(f"No FileName entry found for owner_id: {owner_id}")
+            return 
         logger.debug(f"Starting to process CSV for user: {owner.username}")
 
-        # Set processing flag to True
-        file_name_entry.processing = True
-        file_name_entry.save()
+        # If processing only the first entry:
+        file_name_entry = file_name_entries.first()
 
-        # Fetch asset names to be processed
-        asset_names = TradeUploadBlofin.objects.filter(owner=owner).values_list('underlying_asset', flat=True)
-        logger.debug(f"Retrieved asset names: {list(asset_names)}")
+        with transaction.atomic():
+            # Set processing flag to True
+            file_name_entry.processing = True
+            file_name_entry.save()
 
-        # Loop through each asset and trigger background tasks
-        for asset_name in asset_names:
-            process_trade_ids_in_background.delay(owner.id)  # Process trade IDs for each asset
-            process_asset_in_background.delay(owner.id, asset_name)  # Process trades for each asset
-            logger.debug(f"Triggered background task for asset processing: {asset_name}")
+            # Fetch asset names to be processed
+            asset_names = TradeUploadBlofin.objects.filter(owner=owner).values_list('underlying_asset', flat=True)
+            logger.debug(f"Retrieved asset names: {list(asset_names)}")
 
-            # Check for cancellation after processing each asset
-            if file_name_entry.cancel_processing:
-                logger.info("Processing cancelled. Exiting.")
-                return  # Exit the task
-                
+            # Loop through each asset and trigger background tasks
+            for asset_name in asset_names:
+                process_trade_ids_in_background.delay(owner.id)
+                process_asset_in_background.delay(owner.id, asset_name)
+                logger.debug(f"Triggered background task for asset processing: {asset_name}")
+
+                if file_name_entry.cancel_processing:
+                    logger.info("Processing cancelled. Exiting.")
+                    return  # Exit the task
+
     except Exception as e:
         logger.error(f"Error processing CSV file: {str(e)}")
     finally:
-        # Reset processing flag
-        file_name_entry.processing = False
-        file_name_entry.cancel_processing = False  # Reset cancel flag
-        file_name_entry.save()
+        with transaction.atomic():
+            # Reset processing flag
+            file_name_entry.processing = False
+            file_name_entry.cancel_processing = False  # Reset cancel flag
+            file_name_entry.save()
