@@ -114,6 +114,8 @@ class BloFinHandler:
             price = convert_to_decimal(row['Price'])
             filled_quantity = convert_to_decimal(row['Filled'])
             reduce_only = convert_to_boolean(row['Reduce-only'])
+            side = row['Side'].split('(')[0].strip()  # Remove everything after '(' and strip any extra spaces
+
 
             is_matched = False
             is_open = False
@@ -164,7 +166,7 @@ class BloFinHandler:
                 margin_mode=row['Margin Mode'],
                 leverage=row['Leverage'],
                 order_time=order_time,
-                side=row['Side'],
+                side=side,
                 avg_fill=avg_fill,
                 price=price,
                 filled_quantity=filled_quantity,
