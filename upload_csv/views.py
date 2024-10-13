@@ -31,7 +31,7 @@ class CsvTradeView(generics.ListAPIView):
 
 
 class FileNameListView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     serializer_class = FileNameSerializer
 
     def get_queryset(self):
@@ -89,7 +89,7 @@ class DeleteAllTradesView(generics.DestroyAPIView):
 
 
 class UploadFileView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     serializer_class = FileUploadSerializer
     http_method_names = ['post', 'options', 'head']
 
