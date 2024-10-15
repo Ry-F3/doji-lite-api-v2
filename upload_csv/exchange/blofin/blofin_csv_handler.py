@@ -103,7 +103,7 @@ class BloFinHandler:
 
             if underlying_asset not in ['ARBUSDT', 'BTCUSDT', 'ETHUSDT',
                                         'RUNEUSDT', 'INJUSDT', 'VRAUSDT', 'LDOUSDT', 'WIFUSDT', 'SOLUSDT',
-                                        'BLURUSDT', 'MATICUSDT', 'SEIUSDT', 'NEARUSDT']:
+                                        'BLURUSDT', 'MATICUSDT', 'SEIUSDT', 'NEARUSDT', 'GMEUSDT']:
                 return None
 
 
