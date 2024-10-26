@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class CsvTradeView(generics.ListAPIView):
     serializer_class = SaveTradeSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     queryset = TradeUploadBlofin.objects.all().order_by('-order_time')
     filter_backends = [DjangoFilterBackend,
                        filters.OrderingFilter, filters.SearchFilter]
@@ -39,7 +39,7 @@ class FileNameListView(generics.ListAPIView):
 
 
 class DeleteTradesByFileNameView(generics.DestroyAPIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def delete(self, request, *args, **kwargs):
         file_id = kwargs.get('pk')
